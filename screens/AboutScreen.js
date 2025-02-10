@@ -20,7 +20,7 @@ export default function AboutScreen() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require('../assets/logo.png')}
+          source={require('../assets/fsu logo.jpg')}
           style={styles.logo}
         />
         <Text style={styles.title}>FSU,Pulchowk Campus</Text>
