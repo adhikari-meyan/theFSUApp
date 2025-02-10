@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">Add Post</h2>
+            <form action="/addPost" method="post" enctype="multipart/form-data">
+                <!-- Post ID Field -->
+                <div class="mb-3">
+                    <label for="postId" class="form-label">Post ID</label>
+                    <input name='postId' value="{{id}}" class="form-control" id="postId" name="postId" placeholder="Enter Post ID" required>
+                </div>
+
+                <!-- User Field (Dropdown) -->
+                <div class="mb-3">
+                    <label for="user" class="form-label">User</label>
+                    <select name='user' class="form-control" id="user" name="user" required>
+                        <!-- Backend will populate this dropdown with user options -->
+                        <option value="" disabled selected>Select a User</option>
+                        <!-- Example options, these will be replaced by backend data -->
+                  x 
+                        {%for user in users%}
+                            <option value="{{user.id}}">{{user.name}}
+                
+                            </option>
+                        {%endfor%}
+                    </select>
+                </div>
+
+                <!-- Time Field -->
+                <div class="mb-3">
+                    <label for="time" class="form-label">Post Time</label>
+                    <input name='time' type="datetime-local" class="form-control" id="time" name="time" required>
+                </div>
+
+                <!-- Content Field -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea name='content' class="form-control" id="content" name="content" rows="4" placeholder="Write your post content"></textarea>
+                </div>
+
+                <!-- Likes Field -->
+                <div class="mb-3">
+                    <label for="likes" class="form-label">Likes</label>
+                    <input name='likes' type="number" class="form-control" id="likes" name="likes" placeholder="Enter number of likes" required>
+                </div>
+
+                <!-- Comments Field -->
+                <div class="mb-3">
+                    <label for="comments" class="form-label">Comments</label>
+                    <textarea name='comments' class="form-control" id="comments" name="comments" rows="4" placeholder="Add your comments (separate by commas)" required></textarea>
+                </div>
+
+                <!-- Images Field -->
+                <div class="mb-3">
+                    <label for="images" class="form-label">Upload Images</label>
+                    <input name='images' type="file" class="form-control" id="images" name="images" accept="image/*" multiple>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100">Submit Post</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
