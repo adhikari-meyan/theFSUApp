@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify,url_for,render_template,session
 from models import User,Post,Comment
 import models
-from datetime import datetime
+from datetime import datetime,timedelta
+import traceback
 
 
 app = Flask(__name__)
@@ -154,9 +155,9 @@ def add_post():
         temp.id= request.form['postId']
         temp.user = [us for us in model_manger.users if us.id == int(request.form['user'])][0]
         print(temp.user.id)
-        temp.time=request.form['time']
+        temp.time=str(datetime.now())
         temp.content = request.form['content']
-        temp.likes = request.form['likes']
+        temp.likes = []
         temp.comments = []
         temp2 = request.files.getlist('images') 
         for t in temp2:
@@ -207,14 +208,31 @@ def home_feed():
         end = start + limit
         
         paginated_posts = all_posts[start:end]
-        
+
+    
+        def calculate_date(prevDate):
+            now = datetime.now()
+            dt = datetime.strptime(prevDate,"%Y-%m-%d %H:%M:%S.%f")
+            time_diff = now-dt
+            if time_diff < timedelta(minutes=1):
+                result = f"{time_diff.seconds} seconds ago"
+            elif time_diff < timedelta(hours=1):
+                result = f"{time_diff.seconds // 60} minutes ago"
+            elif time_diff < timedelta(days=1):
+                result = f"{time_diff.seconds // 3600} hours ago"
+            elif time_diff < timedelta(days=2):
+                result = f"{time_diff.days} days, {(time_diff.seconds // 3600) % 24} hours ago"
+            else:
+                result = dt.strftime("%Y-%m-%d %H:%M")
+            return result
+
         return jsonify({
             "message": "Welcome to the homepage feed!",
             "feed": [{
                 "id": post.id,
                 'user': {
                     'name': post.user.name,
-                    'time': post.time,
+                    'time': calculate_date(post.time),
                     'avatar': url_for('static', filename="avatar.png", _external=True)
                 },
                 'content': post.content,
@@ -231,7 +249,10 @@ def home_feed():
             } for post in paginated_posts]
         }), 200
     except Exception as e:
+        for frmae in traceback.extract_tb(e.__traceback__):
+            print(frmae.lineno,frmae.name)
         print(e)
+
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":

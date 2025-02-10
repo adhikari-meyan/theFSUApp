@@ -67,14 +67,14 @@ if __name__ == "__main__":
     post = Post()
     post.id = 1
     post.user = user 
-    post.time = "10:00 AM"
+    post.time = "2025-02-10 12:42:05.898786"
     post.content = "SOME RANDOM SHIT"
     post.likes = []
 
     cmt1 = Comment()
     cmt1.user = user
     cmt1.text = "NICE GOD"
-    cmt1.time= "NICE GOD"
+    cmt1.time= "2025-02-10 12:42:05.898786"
 
     cmt2 = Comment()
     cmt2.user = user
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     post2.id = 2
     post2.content="RNADOM"
     post2.user = user
-    post2.time = "time.time()"
+    post2.time = "2025-02-10 12:42:05.898786"
     post2.images = ["avatar.png"]
     post2.comments = []
     post2.lieks = []

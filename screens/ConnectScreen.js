@@ -37,6 +37,7 @@ export default function WiFiConnectScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
+              autoCapitalize='none'
               placeholder="Enter your password"
             />
             <TouchableOpacity
