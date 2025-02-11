@@ -61,32 +61,29 @@ class Post:
 if __name__ == "__main__":
     user = User()
     user.id = 1
-    user.name = "Meyan"
-    user.avatar = "image.png"
+    user.name = "FSU, Pulchowk Campus"
+    user.avatar = "fsu logo.jpg"
 
     post = Post()
     post.id = 1
     post.user = user 
     post.time = "2025-02-10 12:42:05.898786"
-    post.content = "SOME RANDOM SHIT"
+    post.content = "We, the FSU hope that this new app can make all of our lives easier and more convineient. I thank all of the developers who tirelessly worked in the development of this app. I hope, this app gets more upgrades in the future and become more functional."
     post.likes = []
 
     cmt1 = Comment()
     cmt1.user = user
-    cmt1.text = "NICE GOD"
+    cmt1.text = "Yes! I also think that. Oh wait! I am You."
     cmt1.time= "2025-02-10 12:42:05.898786"
 
-    cmt2 = Comment()
-    cmt2.user = user
-    cmt2.text = "BLOW GOOD"
-    cmt2.time = "BLOW GOOD"
+    
 
-    post.comments = [cmt1,cmt2]
-    post.images = ["avatar.png"]
+    post.comments = [cmt1]
+    post.images = ["fsu logo.jpg"]
 
     post2 = Post()
     post2.id = 2
-    post2.content="RNADOM"
+    post2.content="There is an event happening in pulchowk campus i request all of you guys to join that event as it is very fruitful especially for the first semester students."
     post2.user = user
     post2.time = "2025-02-10 12:42:05.898786"
     post2.images = ["avatar.png"]

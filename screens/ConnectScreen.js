@@ -1,142 +1,214 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState, useEffect } from 'react';
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+  Alert
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function WiFiConnectScreen() {
+const WifiLoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    loadCredentials();
+  }, []);
+
+  const loadCredentials = async () => {
+    try {
+      const savedUsername = await AsyncStorage.getItem('username');
+      const savedPassword = await AsyncStorage.getItem('password');
+      if (savedUsername) setUsername(savedUsername);
+      if (savedPassword) setPassword(savedPassword);
+    } catch (error) {
+      console.error('Error loading credentials:', error);
+    }
+  };
+
+  const saveCredentials = async () => {
+    try {
+      await AsyncStorage.setItem('username', username);
+      await AsyncStorage.setItem('password', password);
+    } catch (error) {
+      console.error('Error saving credentials:', error);
+    }
+  };
+
+  const handleConnect = async () => {
+    if (!username || !password) {
+      Alert.alert('Error', 'Please enter both username and password');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const payload = {
+        mode: '191',
+        username,
+        password,
+        a: Date.now(),
+        producttype: 'none'
+      };
+
+      const response = await axios.post('https://10.100.1.1:8090/login.xml', payload, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Referer': 'https://10.100.1.1:8090/'
+        },
+        timeout: 10000
+      });
+
+      if (response.status === 200) {
+        if (response.data.includes('You are signed in as')) {
+          await saveCredentials();
+          Alert.alert('Success', 'Successfully connected to WiFi!');
+        } else {
+          Alert.alert('Error', 'Invalid credentials or maximum login limit reached');
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Unable to connect. Please check your WiFi connection.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="wifi" size={40} color="#1a73e8" />
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <View style={styles.content}>
+        <Icon name="wifi" size={40} color="#1a73e8" style={styles.wifiIcon} />
         <Text style={styles.title}>Campus WiFi Login</Text>
-        <Text style={styles.notice}>
+        <Text style={styles.subtitle}>
           Please connect to campus WiFi network before proceeding
         </Text>
-      </View>
 
-      <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username (Roll No.)</Text>
           <TextInput
             style={styles.input}
+            placeholder="Username (Roll No.)"
             value={username}
             onChangeText={setUsername}
-            placeholder="Enter your roll number"
-            keyboardType="numeric"
+            autoCapitalize="none"
           />
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              autoCapitalize='none'
-              placeholder="Enter your password"
+          <TextInput
+            style={[styles.input, { paddingRight: 50 }]}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity 
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Icon 
+              name={showPassword ? 'eye-off' : 'eye'} 
+              size={24} 
+              color="#666"
             />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              <Icon
-                name={showPassword ? 'eye-slash' : 'eye'}
-                size={20}
-                color="#666"
-              />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.connectButton}>
-          <Icon name="plug" size={16} color="#fff" style={styles.connectIcon} />
-          <Text style={styles.connectText}>Connect</Text>
+        <TouchableOpacity 
+          style={styles.connectButton}
+          onPress={handleConnect}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <>
+              <Icon name="wifi" size={20} color="#fff" style={styles.buttonIcon} />
+              <Text style={styles.buttonText}>Connect</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    alignItems: 'center',
+  content: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#f8f9fa',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  wifiIcon: {
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
-    marginTop: 10,
+    marginBottom: 10,
+    color: '#1a73e8',
   },
-  notice: {
-    fontSize: 16,
+  subtitle: {
+    fontSize: 14,
     color: '#666',
-    marginTop: 5,
+    marginBottom: 30,
     textAlign: 'center',
   },
-  formContainer: {
-    padding: 20,
-  },
   inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    width: '100%',
+    marginBottom: 15,
+    position: 'relative',
   },
   input: {
+    width: '100%',
+    height: 50,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    padding: 12,
+    paddingHorizontal: 15,
     fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
+    backgroundColor: '#f8f9fa',
   },
   eyeIcon: {
-    padding: 12,
+    position: 'absolute',
+    right: 15,
+    top: 13,
   },
   connectButton: {
+    width: '100%',
+    height: 50,
     backgroundColor: '#1a73e8',
     borderRadius: 8,
-    padding: 15,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
   },
-  connectIcon: {
-    marginRight: 8,
+  buttonIcon: {
+    marginRight: 10,
   },
-  connectText: {
+  buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
 });
+
+export default WifiLoginScreen;
