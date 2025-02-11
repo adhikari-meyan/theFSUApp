@@ -12,8 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "permissions": ["MEDIA_LIBRARY", "MEDIA_LIBRARY_WRITE_ONLY"]
-,
+    "permissions": [
+      "MEDIA_LIBRARY",
+      "MEDIA_LIBRARY_WRITE_ONLY"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,10 +23,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.meyan.FSUApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4b34bf6d-cdef-42bd-aab5-1f34a0650596"
+      }
     }
   }
 }
