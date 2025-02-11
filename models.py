@@ -62,7 +62,7 @@ if __name__ == "__main__":
     user = User()
     user.id = 1
     user.name = "FSU, Pulchowk Campus"
-    user.avatar = "fsu logo.jpg"
+    user.avatar = "nnn.png"
 
     post = Post()
     post.id = 1
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     
 
     post.comments = [cmt1]
-    post.images = ["fsu logo.jpg"]
+    post.images = ["nnn.png"]
 
     post2 = Post()
     post2.id = 2
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     post2.time = "2025-02-10 12:42:05.898786"
     post2.images = ["avatar.png"]
     post2.comments = []
-    post2.lieks = []
+    post2.likes = []
 
 
 

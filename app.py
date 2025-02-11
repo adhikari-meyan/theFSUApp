@@ -233,7 +233,7 @@ def home_feed():
                 'user': {
                     'name': post.user.name,
                     'time': calculate_date(post.time),
-                    'avatar': url_for('static', filename="avatar.png", _external=True)
+                    'avatar': url_for('static', filename=post.user.avatar, _external=True)
                 },
                 'content': post.content,
                 'isLiked': (True if model_manger.workingUser in post.likes else False),
