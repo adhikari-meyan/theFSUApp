@@ -11,7 +11,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import SettingsModal from './settings';
 
-const API_BASE_URL = 'http://10.100.80.59:5000';
+const API_BASE_URL = 'http://10.100.31.90:5000';
 
 const HomeScreen = () => {
   const [posts, setPosts] = useState([]);

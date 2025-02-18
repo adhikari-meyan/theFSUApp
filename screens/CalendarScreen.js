@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const API_BASE_URL = 'http://10.100.80.59:5000';
+const API_BASE_URL = 'http://10.100.31.90:5000';
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());

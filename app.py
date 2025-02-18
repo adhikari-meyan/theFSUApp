@@ -13,39 +13,12 @@ model_manger.load()
 
 
 events_data = {
-    "2025-02-14": [
+    
+    "2025-02-23": [
         {
-            "title": "Valentine's Day Celebration",
-            "time": "6:00 PM",
-            "description": "Celebrate love and friendship at the annual Valentine's Day event."
-        },
-    ],
-    "2025-02-21": [
-        {
-            "title": "Tech Conference",
-            "time": "9:00 AM",
-            "description": "Join the most awaited tech conference of the year!"
-        },
-    ],
-    "2025-03-10": [
-        {
-            "title": "Team Building Activity",
-            "time": "10:00 AM",
-            "description": "A fun-filled team-building exercise."
-        },
-    ],
-    "2025-02-10": [
-        {
-            "title": "Tefuckingtivity",
-            "time": "10:00 AM",
-            "description": "A fun-filled team-building exercise."
-        },
-    ],
-    "2025-02-11": [
-        {
-            "title": "Telsdfs;Activity",
-            "time": "10:00 AM",
-            "description": "A fun-filled team-building exercise."
+            "title": "Deadline",
+            "time": "12:00 AM",
+            "description": "Hritik Acharya Memorial Pulchowk Pride Award"
         },
     ]
 }
