@@ -26,6 +26,24 @@ events_data = {
     ]
 }
 
+def time_ago(post_time):
+    now = datetime.now()
+    diff = now - post_time
+
+    seconds = diff.total_seconds()
+    if seconds < 60:
+        return f"{int(seconds)} seconds ago"
+    elif seconds < 3600:
+        return f"{int(seconds // 60)} minutes ago"
+    elif seconds < 86400:
+        return f"{int(seconds // 3600)} hours ago"
+    elif seconds < 2592000:  # 30 days
+        return f"{int(seconds // 86400)} days ago"
+    elif seconds < 31536000:  # 1 year
+        return f"{int(seconds // 2592000)} months ago"
+    else:
+        return f"{int(seconds // 31536000)} years ago"
+
 @app.route('/getcalendar', methods=["POST"])
 def get_calendar():
     data = request.get_json()
@@ -196,7 +214,7 @@ def home_feed():
         if page < 1 or limit < 1:
             return jsonify({"error": "Invalid page or limit parameters"}), 400
 
-        posts = Post.query.paginate(page=page, per_page=limit, error_out=False).items
+        posts = Post.query.order_by(Post.time.desc()).paginate(page=page, per_page=limit, error_out=False).items
 
         return jsonify({
             "message": "Welcome to the homepage feed!",
@@ -204,11 +222,11 @@ def home_feed():
                 "id": post.id,
                 'user': {
                     'name': post.user.name,
-                    'time': post.time.strftime("%Y-%m-%d %H:%M"),
+                    'time':time_ago(post.time),
                     'avatar': url_for('static', filename=post.user.avatar, _external=True)
                 },
                 'content': post.content,
-                'isLiked':Like.query.filter_by(post_id = post.id,user_id =int(session.get('userID'))).count() == 1,
+                'isLiked':True,
                 "likes": Like.query.filter_by(post_id=post.id).count(),
                 "comments": [{
                     "id": comment.id,
